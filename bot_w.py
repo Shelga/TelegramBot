@@ -70,8 +70,8 @@ def save_to_db(message):
     connect.commit()
     
 
-def echo_all(message):
-	bot.reply_to_message("your weight is:", message.text)
+# def send_message(message):
+    bot.send_message(message.chat.id, f"your weight is: {message_user}")
     
 
 
