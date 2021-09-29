@@ -42,7 +42,7 @@ def send_welcome(message):
 #         bot.send_message(message.chat.id, "You are already in the chat")
 
 
-@bot.message_handler(commands=['tesg'])
+@bot.message_handler(commands=['send'])
 def send_welcome(message):
     bot.reply_to(message, "Enter your weight")
 
@@ -52,8 +52,8 @@ def save_to_db(message):
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS weight(
-        id INTEGER,
+    cursor.execute("""CREATE TABLE IF NOT EXISTS weight_from(
+        user_id INTEGER,
         date TEXT,
         message TEXT 
     )""")
@@ -61,19 +61,32 @@ def save_to_db(message):
     connect.commit()
 
     id_user = message.chat.id
-   
     date_message = datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d %H:%M:%S')
-    print(date_message)
     message_user = message.text
+
+    params = (id_user, date_message, message_user)
     
-    cursor.execute("INSERT INTO weight VALUES(?, ?, ?);", [id_user, date_message,  message_user])
+    cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
     connect.commit()
     
 
 # def send_message(message):
-    bot.send_message(message.chat.id, f"your weight is: {message_user}")
+    # bot.send_message(message.chat.id, f"Your weight is: {message_user}")
     
 
+@bot.message_handler(commands=['show_previous_values'])
+def send_welcome(message):
+
+    connect = sqlite3.connect('message.db')
+    cursor = connect.cursor()
+
+    previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
+    connect.commit()
+
+    print("previous_values", previous_values)
+
+    bot.send_message(message.chat.id, f"Your previous weight is: {previous_values}")
+ 
 
 print('STARTED...')
 
