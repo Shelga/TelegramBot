@@ -8,7 +8,7 @@ bot = telebot.TeleBot("1999350759:AAFIWJB-no9lxy876tzmEtIZTmycGYwDlUA", parse_mo
 
 
 
-@bot.message_handler(commands=['start', 'help'])
+@bot.message_handler(commands=['start'])
 def send_welcome(message):
     bot.reply_to(message, 
         "Welcome! I will help you track your weight changes. \n" +
@@ -17,6 +17,27 @@ def send_welcome(message):
         "To know previous values press /show_previous_values. \n" +
         "To get a graph of changes press /show_chart"
     )
+
+
+
+@bot.message_handler(commands=['help'])  
+def help_command(message):  
+    keyboard = telebot.types.InlineKeyboardMarkup()  
+    keyboard.add(  
+        telebot.types.InlineKeyboardButton(  
+            'Message the developer', url='telegram.me/olikLelik8'  
+  )  
+    )  
+    bot.send_message(  
+        message.chat.id,  
+        '1) To send the current weight, press /send. \n' +
+        '2) Next you will receive a confirmation message about the entered weight \n' +
+        '3) By selecting the command /show_previous_values you request the previous value.\n' +
+        '4) To see the changes over the last 10 days, call the command /show_chart.\n' +
+        '5) You can also write to the creator of the bot using the link:',  
+        reply_markup=keyboard  
+    )
+
 
 
 # @bot.message_handler(commands=['tesg'])
