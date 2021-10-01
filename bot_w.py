@@ -88,15 +88,28 @@ def save_to_db(message):
     id_user = message.chat.id
     date_message = datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d %H:%M:%S')
     message_user = message.text
-
     params = (id_user, date_message, message_user)
-    
-    cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
-    connect.commit()
 
-    previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
-    previous_values = cursor.fetchone()
-    print("send",previous_values[3])
+    if message_user.strip().isdigit():
+        cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
+        connect.commit()
+
+        previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
+        previous_values = cursor.fetchone()
+        print("send",previous_values[3])
+        print("User input is Number")
+    else:
+        bot.reply_to(message, "Yours input is string")
+        print("User input is string")
+
+    
+    
+    # cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
+    # connect.commit()
+
+    # previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
+    # previous_values = cursor.fetchone()
+    # print("send",previous_values[3])
 
 
 # def send_message(message):
