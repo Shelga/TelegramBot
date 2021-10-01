@@ -63,6 +63,10 @@ def help_command(message):
 #         bot.send_message(message.chat.id, "You are already in the chat")
 
 
+
+
+
+
 @bot.message_handler(commands=['send'])
 def send_welcome(message):
     bot.reply_to(message, "Enter your weight")
@@ -89,19 +93,28 @@ def save_to_db(message):
     
     cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
     connect.commit()
-    
+
+    previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
+    previous_values = cursor.fetchone()
+    print("send",previous_values[3])
+
 
 # def send_message(message):
     # bot.send_message(message.chat.id, f"Your weight is: {message_user}")
+    # print("here")
     
 
 @bot.message_handler(commands=['show_previous_values'])
-def send_welcome(message):
+def send_previous_values(message):
+
+    print("hello")
 
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
-    previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
+    previous_values = cursor.execute("SELECT message FROM weight_from ORDER BY id DESC LIMIT 1;")
+    previous_values = cursor.fetchone()
+    print("show", previous_values)
     connect.commit()
 
     print("previous_values", previous_values)
