@@ -2,9 +2,14 @@ from sqlite3.dbapi2 import IntegrityError
 import telebot
 import sqlite3
 import datetime
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
-bot = telebot.TeleBot("1999350759:AAFIWJB-no9lxy876tzmEtIZTmycGYwDlUA", parse_mode=None)
+token = os.getenv('TOKEN')
+
+bot = telebot.TeleBot(token, parse_mode=None)
 
 
 
