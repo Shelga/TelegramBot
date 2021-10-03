@@ -77,7 +77,7 @@ def send_welcome(message):
     bot.reply_to(message, "Enter your weight")
 
 
-@bot.message_handler(func=lambda message: True)
+# @bot.message_handler(func=lambda message: True)
 def save_to_db(message):
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
@@ -107,6 +107,8 @@ def save_to_db(message):
             previous_values = cursor.fetchone()
             print("send",previous_values[3])
             print("User input is Number")
+            bot.send_message(message.chat.id, f"Your weight is: {message_user}")
+            print("here")
         else:
             bot.send_message(message.chat.id, "Yours input is string")
             print("User input is string")
@@ -144,9 +146,8 @@ def save_to_db(message):
     # print("send",previous_values[3])
 
 
-def send_message(message):
-    bot.send_message(message.chat.id, f"Your weight is: {message_user}")
-    print("here")
+# def send_message(message):
+
     
 
 @bot.message_handler(commands=['show_previous_values'])
