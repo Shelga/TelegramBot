@@ -158,7 +158,7 @@ def send_previous_values(message):
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
-    previous_values_p = cursor.execute("SELECT message FROM weight_from ORDER BY id DESC LIMIT 7;")
+    previous_values_p = cursor.execute("SELECT message FROM weight_from ORDER BY id DESC LIMIT 1;")
     previous_values_p = cursor.fetchall()
     previous_values = previous_values_p[::-1]
     print("show", previous_values)
@@ -167,6 +167,22 @@ def send_previous_values(message):
     print("previous_values", previous_values)
     bot.send_message(message.chat.id, f"Your previous weight is: {previous_values}")
   
+@bot.message_handler(commands=['show_previous_week'])
+def send_previous_values(message):
+
+    print("hello")
+
+    connect = sqlite3.connect('message.db')
+    cursor = connect.cursor()
+
+    previous_values_p = cursor.execute("SELECT message FROM weight_from ORDER BY id DESC LIMIT 7;")
+    previous_values_p = cursor.fetchall()
+    previous_values = previous_values_p[::-1]
+    print("show", previous_values)
+    connect.commit()
+
+    print("previous_values", previous_values)
+    bot.send_message(message.chat.id, f"Your previous weight is: {previous_values}")
 
 print('STARTED...')
 
