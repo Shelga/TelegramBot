@@ -95,17 +95,44 @@ def save_to_db(message):
     message_user = message.text
     params = (id_user, date_message, message_user)
 
-    if message_user.strip().isdigit():
-        cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
-        connect.commit()
+    first_character = message_user[0]
+    print("first_character", first_character)
 
-        previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
-        previous_values = cursor.fetchone()
-        print("send",previous_values[3])
-        print("User input is Number")
-    else:
-        bot.reply_to(message, "Yours input is string")
-        print("User input is string")
+    if first_character != "/":
+        if message_user.strip().isdigit():
+            cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
+            connect.commit()
+
+            previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
+            previous_values = cursor.fetchone()
+            print("send",previous_values[3])
+            print("User input is Number")
+        else:
+            bot.send_message(message.chat.id, "Yours input is string")
+            print("User input is string")
+
+    
+    
+        # cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
+        # connect.commit()
+
+        # previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
+        # previous_values = cursor.fetchone()
+        # print("send",previous_values[3])
+    
+
+
+    # if message_user.strip().isdigit():
+    #     cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
+    #     connect.commit()
+
+    #     previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
+    #     previous_values = cursor.fetchone()
+    #     print("send",previous_values[3])
+    #     print("User input is Number")
+    # else:
+    #     bot.send_message(message.chat.id, "Yours input is string")
+    #     print("User input is string")
 
     
     
@@ -117,9 +144,9 @@ def save_to_db(message):
     # print("send",previous_values[3])
 
 
-# def send_message(message):
-    # bot.send_message(message.chat.id, f"Your weight is: {message_user}")
-    # print("here")
+def send_message(message):
+    bot.send_message(message.chat.id, f"Your weight is: {message_user}")
+    print("here")
     
 
 @bot.message_handler(commands=['show_previous_values'])
@@ -136,9 +163,8 @@ def send_previous_values(message):
     connect.commit()
 
     print("previous_values", previous_values)
-
     bot.send_message(message.chat.id, f"Your previous weight is: {previous_values}")
- 
+  
 
 print('STARTED...')
 
