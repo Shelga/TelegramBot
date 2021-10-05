@@ -81,6 +81,7 @@ def send_welcome(message):
 
 # @bot.message_handler(func=lambda message: True)
 def save_to_db(message):
+    # connect to the database
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
@@ -92,14 +93,17 @@ def save_to_db(message):
 
     connect.commit()
 
+
+    # user message data
     id_user = message.chat.id
     date_message = datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d %H:%M:%S')
     message_user = message.text
     
 
-
     params = (id_user, date_message, message_user)
 
+
+    # check the first character of the entered message
     # first_character = string_int[0]
     # print("first_character", first_character)
 
