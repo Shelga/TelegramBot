@@ -79,7 +79,7 @@ def send_welcome(message):
     bot.reply_to(message, "Enter your weight")
 
 
-@bot.message_handler(func=lambda message: True)
+# @bot.message_handler(func=lambda message: True)
 def save_to_db(message):
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
@@ -95,29 +95,25 @@ def save_to_db(message):
     id_user = message.chat.id
     date_message = datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d %H:%M:%S')
     message_user = message.text
-    try:
-        string_int = int(message_user)
-        print(string_int)
-    except ValueError:
-        print('Please enter an integer')
+    
 
 
     params = (id_user, date_message, message_user)
 
-    first_character = message_user[0]
-    print("first_character", first_character)
+    # first_character = string_int[0]
+    # print("first_character", first_character)
 
 
 
-    if first_character != "/":
-        if message_user.strip().isdigit():
+    # if first_character != "/":
+    #     if message_user.strip().isdigit():
             
 
-            cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
-            connect.commit()
+    #         cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
+    #         connect.commit()
 
-            previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
-            previous_values = cursor.fetchone()
+    #         previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
+    #         previous_values = cursor.fetchone()
 
             # try:
             #     string_int = int(previous_values)
@@ -125,36 +121,36 @@ def save_to_db(message):
             # except ValueError:
             #     print('Please enter an integer')
 
-            print("send!!!!",type(int((previous_values[3]))))
-            print("User input is Number")
-            bot.send_message(message.chat.id, f"Your weight is: {message_user}")
-            print("here")
-        else:
-            bot.send_message(message.chat.id, "Yours input is string")
-            print("User input is string")
+        #     print("send!!!!",type(int((previous_values[3]))))
+        #     print("User input is Number")
+        #     bot.send_message(message.chat.id, f"Your weight is: {message_user}")
+        #     print("here")
+        # else:
+        #     bot.send_message(message.chat.id, "Yours input is string")
+        #     print("User input is string")
 
     
     
-        cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
-        connect.commit()
+        # cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
+        # connect.commit()
 
-        previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
-        previous_values = cursor.fetchone()
-        print("send",previous_values[3])
+        # previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
+        # previous_values = cursor.fetchone()
+        # print("send",previous_values[3])
     
 
 
-    if message_user.strip().isdigit():
-        cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
-        connect.commit()
+    # if message_user.strip().isdigit():
+    #     cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
+    #     connect.commit()
 
-        previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
-        previous_values = cursor.fetchone()
-        print("send",previous_values[3])
-        print("User input is Number")
-    else:
-        bot.send_message(message.chat.id, "Yours input is string")
-        print("User input is string")
+    #     previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
+    #     previous_values = cursor.fetchone()
+    #     print("send",previous_values[3])
+    #     print("User input is Number")
+    # else:
+    #     bot.send_message(message.chat.id, "Yours input is string")
+    #     print("User input is string")
 
     
     
