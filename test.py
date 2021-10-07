@@ -15,77 +15,70 @@ bot = telebot.TeleBot(token, parse_mode=None)
 
 
 
-@bot.message_handler(commands=['send'])
-def send_welcome(message):
-    bot.reply_to(message, "Enter your weight")
+# @bot.message_handler(commands=['show_previous_values'])
+# def send_previous_values(message):
 
-@bot.message_handler(func=lambda message: True)
-def save_to_db(message):
-    # connect to the database
+#     print("hello")
+
+#     connect = sqlite3.connect('message.db')
+#     cursor = connect.cursor()
+
+#     previous_values_p = cursor.execute("SELECT message FROM weight_from ORDER BY id DESC LIMIT 1;")
+#     previous_values_p = cursor.fetchall()
+#     previous_values = previous_values_p[::-1]
+#     print("show", previous_values)
+#     connect.commit()
+
+#     print("previous_values", previous_values)
+#     bot.send_message(message.chat.id, f"Your previous weight is: {previous_values}")
+  
+@bot.message_handler(commands=['show_previous_week'])
+def send_previous_values(message):
+
+    print("hello")
+
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
-    cursor.execute("""CREATE TABLE IF NOT EXISTS weight_from(
-        user_id INTEGER,
-        date TEXT,
-        message TEXT 
-    )""")
+    previous_values_p = cursor.execute("SELECT message FROM weight_from ORDER BY id DESC LIMIT 7;")
+    previous_values_p = cursor.fetchall()
+    previous_values_w = previous_values_p[::-1]
 
+
+
+    print("show", previous_values_w)
     connect.commit()
 
-
-    # user message data
-    id_user = message.chat.id
-    date_message = datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d %H:%M:%S')
-    message_user = message.text
-    
-    params = (id_user, date_message, message_user)
-    print((id_user, date_message, message_user))
-
-    if message_user.isdigit():
-        cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
-        connect.commit()
-        print("Done!")
-    else:
-        bot.send_message(message.chat.id, "Yours input is string")
-        print("User input is string")
-
-    
-    
-        # cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
-        # connect.commit()
-
-        # previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
-        # previous_values = cursor.fetchone()
-        # print("send",previous_values[3])
-    
-
-
-    # if message_user.strip().isdigit():
-    #     cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
-    #     connect.commit()
-
-    #     previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
-    #     previous_values = cursor.fetchone()
-    #     print("send",previous_values[3])
-    #     print("User input is Number")
-    # else:
-    #     bot.send_message(message.chat.id, "Yours input is string")
-    #     print("User input is string")
-
-    
-    
-    # cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
-    # connect.commit()
-
-    # previous_values = cursor.execute("SELECT * FROM weight_from ORDER BY id DESC LIMIT 1;")
-    # previous_values = cursor.fetchone()
-    # print("send",previous_values[3])
+    print("previous_values", previous_values_w)
+    bot.send_message(message.chat.id, f"Your previous weight is: {previous_values_w}")
 
 
 
 
-    
+
+
+
+# @bot.message_handler(commands=['tesg'])
+# def tesg(message):
+#     connect = sqlite3.connect('message.db')
+#     cursor = connect.cursor()
+
+
+#     cursor.execute("""CREATE TABLE IF NOT EXISTS user_id(
+#         id INTEGER
+#     )""")
+
+#     connect.commit()
+
+#     id_user = message.chat.id
+#     cursor.execute(f"SELECT id FROM user_id WHERE id = {id_user}")
+#     id_all = cursor.fetchone()
+#     if id_all is None:
+#         user_id = [message.chat.id]
+#         cursor.execute("INSERT INTO user_id VALUES(?);", user_id)
+#         connect.commit()
+#     else: 
+#         bot.send_message(message.chat.id, "You are already in the chat")
 
 
 print('STARTED...')
