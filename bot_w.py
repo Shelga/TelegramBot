@@ -80,7 +80,20 @@ def save_to_db(message):
 
 
 
+@bot.message_handler(commands=['show_previous_values'])
+def send_previous_values(message):
 
+
+    connect = sqlite3.connect('message.db')
+    cursor = connect.cursor()
+
+    previous_values = cursor.execute("SELECT message FROM weight_from ORDER BY id DESC LIMIT 1;")
+    previous_values = cursor.fetchone()
+
+    connect.commit()
+
+    print("previous_values", previous_values[0])
+    bot.send_message(message.chat.id, f"Your previous weight is: {previous_values[0]}")
     
 
 
