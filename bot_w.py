@@ -62,6 +62,8 @@ def save_to_db(message):
     )""")
 
     connect.commit()
+    cursor.close()
+
 
     # user message data
     id_user = message.chat.id
@@ -73,6 +75,8 @@ def save_to_db(message):
     if message_user.isdigit():
         cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
         connect.commit()
+        cursor.close()
+
         bot.send_message(message.chat.id, f"Your weight is: {message_user}")
     else:
         bot.send_message(message.chat.id, "Yours input is string. Call the command /send again")
@@ -91,6 +95,8 @@ def send_previous_values(message):
     previous_values = cursor.fetchone()
 
     connect.commit()
+    cursor.close()
+
 
     print("previous_values", previous_values[0])
     bot.send_message(message.chat.id, f"Your previous weight is: {previous_values[0]}")
