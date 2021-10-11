@@ -62,12 +62,12 @@ def save_to_db(message):
     )""")
 
     connect.commit()
-    cursor.close()
+  
 
 
     # user message data
     id_user = message.chat.id
-    date_message = datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d %H:%M:%S')
+    date_message = datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d')
     message_user = message.text
     
     params = (id_user, date_message, message_user)

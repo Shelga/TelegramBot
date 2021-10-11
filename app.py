@@ -1,6 +1,7 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
+from test import previous_values_w
 
 # x_list = [1, 2, 3, 4, 5, 6, 7]
 # y_list = [50.0, 49.8, 49.5, 49.6, 49.0, 49.7, 49.5]
@@ -15,7 +16,7 @@ import numpy as np
 
 # Data for plotting
 t = ["25.10", "26.10", "27.10", "28.10", "29.10", "30.10", "01.11"]
-s = [49.0, 49.3, 49.5, 49.6, 49.1, 49.7, 49.5]
+s = previous_values_w
 
 fig, ax = plt.subplots()
 ax.plot(t, s)

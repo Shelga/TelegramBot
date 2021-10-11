@@ -5,6 +5,9 @@ import datetime
 import os
 from dotenv import load_dotenv
 
+import matplotlib.pyplot as plt
+import numpy as np
+
 
 
 load_dotenv()
@@ -58,7 +61,6 @@ bot = telebot.TeleBot(token, parse_mode=None)
 def send_previous_values(message):
 
 
-
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
@@ -70,17 +72,31 @@ def send_previous_values(message):
         previous_values_w.append(float(i[0]))
     previous_values_w.reverse()
 
-
-
-
     print("show", previous_values_w)
     connect.commit()
 
-
-
     print("previous_values_p", previous_values_p)
     print("previous_values_w", previous_values_w)
-    bot.send_message(message.chat.id, f"Your previous weight is: {previous_values_w}")
+
+    # t = ["25.10", "26.10", "27.10", "28.10", "29.10", "30.10", "01.11"]
+    # s = previous_values_w
+
+    # fig, ax = plt.subplots()
+    # ax.plot(t, s)
+
+    # ax.set(xlabel='time (d)', ylabel='weight (kg)',
+    #    title='Weight change chart for 7 days')
+    # ax.grid()
+
+    # fig.savefig("test.png")
+    # plt.show()
+
+    file = open('test.png', 'rb')
+
+
+    bot.send_document(message.chat.id, file)
+    bot.send_document(message.chat.id, "FILEID")
+    # bot.send_message(message.chat.id, f"Your previous weight is: {previous_values_w}")
 
 
 
