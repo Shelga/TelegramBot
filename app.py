@@ -1,7 +1,8 @@
 
 import matplotlib.pyplot as plt
 import numpy as np
-from test import previous_values_w
+from matplotlib.dates import datetime as dt
+# from test import previous_values_w
 
 # x_list = [1, 2, 3, 4, 5, 6, 7]
 # y_list = [50.0, 49.8, 49.5, 49.6, 49.0, 49.7, 49.5]
@@ -15,8 +16,13 @@ from test import previous_values_w
 # plt.show()
 
 # Data for plotting
-t = ["25.10", "26.10", "27.10", "28.10", "29.10", "30.10", "01.11"]
-s = previous_values_w
+# t = ['2021-10-13', '2021-10-13', '2021-10-13', '2021-10-13', '2021-10-13', '2021-10-13', '2021-10-13']
+# s = [49.9, 49.4, 49.7, 49.2, 49.0, 49.1, 49.3]
+
+dates= ['2021-10-13', '2021-10-13', '2021-10-13', '2021-10-13', '2021-10-13', '2021-10-13', '2021-10-13']
+t = [dt.datetime.strptime('%Y-%m-%d') for d in dates]
+print(t)
+s = [49.9, 49.4, 49.7, 49.2, 49.0, 49.1, 49.3]
 
 fig, ax = plt.subplots()
 ax.plot(t, s)

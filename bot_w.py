@@ -62,7 +62,7 @@ def save_to_db(message):
     )""")
 
     connect.commit()
-  
+    # cursor.close()
 
 
     # user message data
@@ -72,7 +72,7 @@ def save_to_db(message):
     
     params = (id_user, date_message, message_user)
 
-    if message_user.isdigit():
+    if message_user.replace('.','',1).isdigit():
         cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
         connect.commit()
         cursor.close()
