@@ -13,14 +13,15 @@ from matplotlib.dates import DateFormatter
 ## Settings for matplot grid
 fig, ax = plt.subplots()
 
+## Loading ENV parameters
 load_dotenv()
-
 token = os.getenv('TOKEN')
 
+## Starting a Telegram bot
 bot = telebot.TeleBot(token, parse_mode=None)
 
 
-
+## Command /start
 @bot.message_handler(commands=['start'])
 def send_welcome(message):
     bot.reply_to(message, 
@@ -31,7 +32,7 @@ def send_welcome(message):
         "To get a graph of changes press /show_chart"
     )
 
-
+## Command /help
 @bot.message_handler(commands=['help'])  
 def help_command(message):  
     keyboard = telebot.types.InlineKeyboardMarkup()  
@@ -50,14 +51,15 @@ def help_command(message):
         reply_markup=keyboard  
     )
 
-
+## Command /send
 @bot.message_handler(commands=['send'])
 def send_welcome(message):
     bot.reply_to(message, "Enter your weight")
 
 @bot.message_handler(func=lambda message: True)
 def save_to_db(message):
-    ## connect to the database
+
+    ## Connecting to the database
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
@@ -70,13 +72,14 @@ def save_to_db(message):
     connect.commit()
 
 
-    ## user message data
+    ## User message data
     id_user = message.chat.id
     date_message = datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d')
     message_user = message.text
     
     params = (id_user, date_message, message_user)
 
+    ## From string to float
     if message_user.replace('.','',1).isdigit():
         cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
         connect.commit()
@@ -88,11 +91,11 @@ def save_to_db(message):
         print("User input is string. ")
 
 
-
+## Command /show_previous_values
 @bot.message_handler(commands=['show_previous_values'])
 def send_previous_values(message):
 
-
+    ## Connecting to the database
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
@@ -102,18 +105,39 @@ def send_previous_values(message):
     connect.commit()
     cursor.close()
 
-
     print("previous_values", previous_values[0])
     bot.send_message(message.chat.id, f"Your previous weight is: {previous_values[0]}")
-    
 
-
-
-
+## Command //show_previous_week
 @bot.message_handler(commands=['show_previous_week'])
 def send_previous_values(message):
 
 
+    connect = sqlite3.connect('message.db')
+    cursor = connect.cursor()
+
+    previous_values_p = cursor.execute("SELECT message FROM weight_from ORDER BY id DESC LIMIT 7;")
+    previous_values_p = cursor.fetchall()
+    connect.commit()
+
+    previous_values_w = []
+    for i in previous_values_p:
+        previous_values_w.append(float(i[0]))
+    previous_values_w.reverse()
+    previous_values_w =  str(previous_values_w)[1:-1]
+    
+
+   
+    print("previous_values_w", previous_values_w)
+
+    bot.send_message(message.chat.id, f"Your previous 7 parameters : {previous_values_w}")
+
+
+## Command //show_chart
+@bot.message_handler(commands=['/show_chart'])
+def send_previous_values(message):
+
+    ## Connecting to the database
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
@@ -138,6 +162,7 @@ def send_previous_values(message):
     connect.commit()
 
 
+    ## Creating a graph
     x = previous_days_w
     ax.clear()
     
@@ -153,8 +178,7 @@ def send_previous_values(message):
   
     y = previous_values_w
   
-    ax.plot(x, y, color = 'b', linewidth = 3)
-
+    ax.plot(x, y, color = 'b', linewidth = 3, label='kg')
 
     ax.tick_params(axis = 'both',   
         which = 'major', 
@@ -169,9 +193,6 @@ def send_previous_values(message):
     file = open('test.png', 'rb')
 
     bot.send_photo(message.chat.id, file)
-
-
-
 
 
 print('STARTED...')
