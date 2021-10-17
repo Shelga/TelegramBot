@@ -20,6 +20,9 @@ token = os.getenv('TOKEN')
 ## Starting a Telegram bot
 bot = telebot.TeleBot(token, parse_mode=None)
 
+## Flags
+sending_weeight = False
+
 
 ## Command /start
 @bot.message_handler(commands=['start'])
@@ -54,42 +57,9 @@ def help_command(message):
 ## Command /send
 @bot.message_handler(commands=['send'])
 def send_welcome(message):
+    global sending_weeight
+    sending_weeight = True
     bot.reply_to(message, "Enter your weight")
-
-@bot.message_handler(func=lambda message: True)
-def save_to_db(message):
-
-    ## Connecting to the database
-    connect = sqlite3.connect('message.db')
-    cursor = connect.cursor()
-
-    cursor.execute("""CREATE TABLE IF NOT EXISTS weight_from(
-        user_id INTEGER,
-        date TEXT,
-        message TEXT 
-    )""")
-
-    connect.commit()
-
-
-    ## User message data
-    id_user = message.chat.id
-    date_message = datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d')
-    message_user = message.text
-    
-    params = (id_user, date_message, message_user)
-
-    ## From string to float
-    if message_user.replace('.','',1).isdigit():
-        cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
-        connect.commit()
-        cursor.close()
-
-        bot.send_message(message.chat.id, f"Your weight is: {message_user}")
-    else:
-        bot.send_message(message.chat.id, "Yours input is string. Call the command /send again")
-        print("User input is string. ")
-
 
 ## Command /show_previous_values
 @bot.message_handler(commands=['show_previous_values'])
@@ -134,7 +104,7 @@ def send_previous_values(message):
 
 
 ## Command //show_chart
-@bot.message_handler(commands=['/show_chart'])
+@bot.message_handler(commands=['show_chart'])
 def send_previous_values(message):
 
     ## Connecting to the database
@@ -194,6 +164,42 @@ def send_previous_values(message):
 
     bot.send_photo(message.chat.id, file)
 
+@bot.message_handler(func=lambda message: True)
+def save_to_db(message):
+    print('HERE')
+    global sending_weeight
+    if sending_weeight:
+        ## Connecting to the database
+        connect = sqlite3.connect('message.db')
+        cursor = connect.cursor()
+
+        cursor.execute("""CREATE TABLE IF NOT EXISTS weight_from(
+            user_id INTEGER,
+            date TEXT,
+            message TEXT 
+        )""")
+
+        connect.commit()
+
+
+        ## User message data
+        id_user = message.chat.id
+        date_message = datetime.datetime.fromtimestamp(int(message.date)).strftime('%Y-%m-%d')
+        message_user = message.text
+        
+        params = (id_user, date_message, message_user)
+
+        ## From string to float
+        if message_user.replace('.','',1).isdigit():
+            cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
+            connect.commit()
+            cursor.close()
+
+            bot.send_message(message.chat.id, f"Your weight is: {message_user}")
+        else:
+            bot.send_message(message.chat.id, "Yours input is string. Call the command /send again")
+            print("User input is string. ")
+        sending_weeight = False 
 
 print('STARTED...')
 
