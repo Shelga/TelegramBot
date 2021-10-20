@@ -1,22 +1,21 @@
 
 # TelegramBot
-
-One Paragraph of the project description
-
-## Getting Started
-
-These instructions will give you a copy of the project up and running on
-your local machine for development and testing purposes. See deployment
-for notes on deploying the project on a live system.
+This bot helps to track weight changes.
+For clarity, you can get a chart of changes over the past 7 days
 
 ### Prerequisites
 
-Requirements for the software and other tools to build, test and push 
+The necessary dependencies are specified in the file requirements.txt
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development
-environment running
+To run the project you need to:
+1. clone the repository
+2. install the necessary libraries
+3. run the file bot_w.py
+4. Find @track_the_weight_bottoms
+5. launch the bot using the /start command
+6. follow the instructions (/help)
 
 
 ## License
@@ -24,8 +23,3 @@ environment running
 This project is licensed under the [CC0 1.0 Universal](LICENSE.md)
 Creative Commons License - see the [LICENSE.md](LICENSE.md) file for
 details
-
-## Acknowledgments
-
-- Billie Thompson - *Provided README Template* -
-    [PurpleBooth](https://github.com/PurpleBooth)

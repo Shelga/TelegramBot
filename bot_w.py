@@ -1,4 +1,3 @@
-from sqlite3.dbapi2 import IntegrityError
 import telebot
 import sqlite3
 import datetime
@@ -6,9 +5,8 @@ import os
 from dotenv import load_dotenv
 
 import matplotlib.pyplot as plt
-import numpy as np
-from matplotlib.dates import datetime as dt
-from matplotlib.dates import DateFormatter
+
+
 
 ## Settings for matplot grid
 fig, ax = plt.subplots()
