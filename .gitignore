@@ -1,10 +1,7 @@
 .gitignore
 .env
 __pycache__
-<<<<<<< HEAD
 newenv
 
 test.py
 app.py
-=======
->>>>>>> 5b56fac2bb418d4aa432335ad0fdbbfdda394378
