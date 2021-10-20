@@ -2,4 +2,5 @@
 .env
 __pycache__
 newenv
-
+message.db
+test.png
