@@ -80,7 +80,6 @@ def send_previous_values(message):
 @bot.message_handler(commands=['show_previous_week'])
 def send_previous_values(message):
 
-
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
@@ -94,9 +93,6 @@ def send_previous_values(message):
     previous_values_w.reverse()
     previous_values_w =  str(previous_values_w)[1:-1]
     
-
-   
-    print("previous_values_w", previous_values_w)
 
     bot.send_message(message.chat.id, f"Your previous 7 parameters : {previous_values_w}")
 
