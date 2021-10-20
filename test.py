@@ -11,25 +11,26 @@ from matplotlib.dates import datetime as dt
 from matplotlib.dates import DateFormatter
 import matplotlib.ticker
 
-## Settings for matplot grid
-fig, ax = plt.subplots()
+# ## Loading ENV parameters
+# load_dotenv()
+# token = os.getenv('TOKEN')
+
+# ## Starting a Telegram bot
+# bot = telebot.TeleBot(token, parse_mode=None)
+
+
+
+# @bot.message_handler(commands=['test'])
+# def send_welcome(message):
+#     connect = sqlite3.connect('message.db')
+#     cursor = connect.cursor()
+#     cursor.execute("DELETE from weight_from where id > 107")
+#     connect.commit()
+    
 
 
 
 
-## Loading ENV parameters
-load_dotenv()
-token = os.getenv('TOKEN')
-
-## Starting a Telegram bot
-bot = telebot.TeleBot(token, parse_mode=None)
-
-
-
-    # connect = sqlite3.connect('message.db')
-    # cursor = connect.cursor()
-    # cursor.execute("DELETE from weight_from where id = 98")
-    # connect.commit()
 
 
 
