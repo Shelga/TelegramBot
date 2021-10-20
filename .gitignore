@@ -1,2 +1,7 @@
 .gitignore
 .env
+__pycache__
+newenv
+
+test.py
+app.py
