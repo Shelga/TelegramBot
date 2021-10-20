@@ -1,9 +1,9 @@
 
 # TelegramBot
 This bot helps to track weight changes.
-![Screenshot_grapf](Screenshot_grapf.png)
+![Screenshot_grapf](Screenshot_send.png)
 For clarity, you can get a chart of changes over the past 7 days
-![Screenshot_send](Screenshot_send.png)
+![Screenshot_send](Screenshot_grapf.png)
 
 ### Prerequisites
 
