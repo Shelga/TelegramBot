@@ -5,6 +5,8 @@ This bot helps to track weight changes.
 For clarity, you can get a chart of changes over the past 7 days
 ![Screenshot_send](Screenshot_grapf.png)
 
+![screen](screen.gif)
+
 ### Prerequisites
 
 The necessary dependencies are specified in the file requirements.txt
