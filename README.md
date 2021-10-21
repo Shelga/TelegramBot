@@ -15,7 +15,7 @@ To run the project you need to:
 1. clone the repository
 2. install the necessary libraries
 3. run the file bot_w.py
-4. Find @track_the_weight_bottoms
+4. Find @track_the_weight_bot
 5. launch the bot using the /start command
 6. follow the instructions (/help)
 
