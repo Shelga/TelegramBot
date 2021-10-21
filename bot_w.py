@@ -19,19 +19,8 @@ token = os.getenv('TOKEN')
 bot = telebot.TeleBot(token, parse_mode=None)
 
 ## Flags
-sending_weeight = False
+sending_weight = False
 
-
-## Command /start
-@bot.message_handler(commands=['start'])
-def send_welcome(message):
-    bot.reply_to(message, 
-        "Welcome! I will help you track your weight changes. \n" +
-        "To get help press /help. \n" + 
-        "To send the current weight press /send. \n" +
-        "To know previous values press /show_previous_values. \n" +
-        "To get a graph of changes press /show_chart"
-    )
 
 ## Command /help
 @bot.message_handler(commands=['help'])  
@@ -55,8 +44,8 @@ def help_command(message):
 ## Command /send
 @bot.message_handler(commands=['send'])
 def send_welcome(message):
-    global sending_weeight
-    sending_weeight = True
+    global sending_weight
+    sending_weight = True
     bot.reply_to(message, "Enter your weight")
 
 ## Command /show_previous_values
@@ -67,13 +56,12 @@ def send_previous_values(message):
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
-    previous_values = cursor.execute("SELECT message FROM weight_from ORDER BY id DESC LIMIT 1;")
+    previous_values = cursor.execute("SELECT message FROM weight ORDER BY id DESC LIMIT 1;")
     previous_values = cursor.fetchone()
 
     connect.commit()
     cursor.close()
 
-    print("previous_values", previous_values[0])
     bot.send_message(message.chat.id, f"Your previous weight is: {previous_values[0]}")
 
 ## Command //show_previous_week
@@ -83,7 +71,7 @@ def send_previous_values(message):
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
-    previous_values_p = cursor.execute("SELECT message FROM weight_from ORDER BY id DESC LIMIT 7;")
+    previous_values_p = cursor.execute("SELECT message FROM weight ORDER BY id DESC LIMIT 7;")
     previous_values_p = cursor.fetchall()
     connect.commit()
 
@@ -105,7 +93,8 @@ def send_previous_values(message):
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
-    previous_values_p = cursor.execute("SELECT message FROM weight_from ORDER BY id DESC LIMIT 7;")
+    ## Add check for if the DB is not created
+    previous_values_p = cursor.execute("SELECT message FROM weight ORDER BY id DESC LIMIT 7;")
     previous_values_p = cursor.fetchall()
 
     previous_values_w = []
@@ -113,7 +102,7 @@ def send_previous_values(message):
         previous_values_w.append(float(i[0]))
     previous_values_w.reverse()
 
-    previous_days_p = cursor.execute("SELECT date FROM weight_from ORDER BY id DESC LIMIT 7;")
+    previous_days_p = cursor.execute("SELECT date FROM weight ORDER BY id DESC LIMIT 7;")
     previous_days_p = cursor.fetchall()
 
     previous_days_w = []
@@ -121,10 +110,7 @@ def send_previous_values(message):
         previous_days_w.append(i[0])
     previous_days_w.reverse()
 
-    print("previous_days_w", previous_days_w)
-    print("previous_values_w", previous_values_w)
     connect.commit()
-
 
     ## Creating a graph
     x = previous_days_w
@@ -160,14 +146,14 @@ def send_previous_values(message):
 
 @bot.message_handler(func=lambda message: True)
 def save_to_db(message):
-    print('HERE')
-    global sending_weeight
-    if sending_weeight:
+    global sending_weight
+    if sending_weight:
         ## Connecting to the database
         connect = sqlite3.connect('message.db')
         cursor = connect.cursor()
 
-        cursor.execute("""CREATE TABLE IF NOT EXISTS weight_from(
+        cursor.execute("""CREATE TABLE IF NOT EXISTS weight(
+            id INTEGER PRIMARY KEY,
             user_id INTEGER,
             date TEXT,
             message TEXT 
@@ -185,7 +171,7 @@ def save_to_db(message):
 
         ## From string to float
         if message_user.replace('.','',1).isdigit():
-            cursor.execute("INSERT INTO weight_from VALUES (NULL, ?, ?, ?)", params)
+            cursor.execute("INSERT INTO weight VALUES (NULL, ?, ?, ?)", params)
             connect.commit()
             cursor.close()
 
@@ -193,7 +179,7 @@ def save_to_db(message):
         else:
             bot.send_message(message.chat.id, "Yours input is string. Call the command /send again")
             print("User input is string. ")
-        sending_weeight = False 
+        sending_weight = False 
 
 print('STARTED...')
 
