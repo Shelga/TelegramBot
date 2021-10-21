@@ -3,6 +3,7 @@ import sqlite3
 import datetime
 import os
 from dotenv import load_dotenv
+from sqlite3 import OperationalError
 
 import matplotlib.pyplot as plt
 
@@ -56,13 +57,16 @@ def send_previous_values(message):
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
-    previous_values = cursor.execute("SELECT message FROM weight ORDER BY id DESC LIMIT 1;")
-    previous_values = cursor.fetchone()
+    try:
+        previous_values = cursor.execute("SELECT message FROM weight ORDER BY id DESC LIMIT 1;")
+        previous_values = cursor.fetchone()
 
-    connect.commit()
-    cursor.close()
+        connect.commit()
+        bot.send_message(message.chat.id, f"Your previous weight is: {previous_values[0]}")
+    except OperationalError:
+        bot.send_message(message.chat.id, "The table is empty, enter the values using the /send command")
 
-    bot.send_message(message.chat.id, f"Your previous weight is: {previous_values[0]}")
+    
 
 ## Command //show_previous_week
 @bot.message_handler(commands=['show_previous_week'])
@@ -71,18 +75,20 @@ def send_previous_values(message):
     connect = sqlite3.connect('message.db')
     cursor = connect.cursor()
 
-    previous_values_p = cursor.execute("SELECT message FROM weight ORDER BY id DESC LIMIT 7;")
-    previous_values_p = cursor.fetchall()
-    connect.commit()
+    try:
+        previous_values_p = cursor.execute("SELECT message FROM weight ORDER BY id DESC LIMIT 7;")
+        previous_values_p = cursor.fetchall()
+        connect.commit()
 
-    previous_values_w = []
-    for i in previous_values_p:
-        previous_values_w.append(float(i[0]))
-    previous_values_w.reverse()
-    previous_values_w =  str(previous_values_w)[1:-1]
-    
+        previous_values_w = []
+        for i in previous_values_p:
+            previous_values_w.append(float(i[0]))
+        previous_values_w.reverse()
+        previous_values_w =  str(previous_values_w)[1:-1]
+        bot.send_message(message.chat.id, f"Your previous 7 parameters : {previous_values_w}")
+    except OperationalError:
+        bot.send_message(message.chat.id, "The table is empty, enter the values using the /send command")
 
-    bot.send_message(message.chat.id, f"Your previous 7 parameters : {previous_values_w}")
 
 
 ## Command //show_chart
@@ -94,55 +100,59 @@ def send_previous_values(message):
     cursor = connect.cursor()
 
     ## Add check for if the DB is not created
-    previous_values_p = cursor.execute("SELECT message FROM weight ORDER BY id DESC LIMIT 7;")
-    previous_values_p = cursor.fetchall()
+    try:
+        previous_values_p = cursor.execute("SELECT message FROM weight ORDER BY id DESC LIMIT 7;")
+        previous_values_p = cursor.fetchall()
 
-    previous_values_w = []
-    for i in previous_values_p:
-        previous_values_w.append(float(i[0]))
-    previous_values_w.reverse()
+        previous_values_w = []
+        for i in previous_values_p:
+            previous_values_w.append(float(i[0]))
+        previous_values_w.reverse()
 
-    previous_days_p = cursor.execute("SELECT date FROM weight ORDER BY id DESC LIMIT 7;")
-    previous_days_p = cursor.fetchall()
+        previous_days_p = cursor.execute("SELECT date FROM weight ORDER BY id DESC LIMIT 7;")
+        previous_days_p = cursor.fetchall()
 
-    previous_days_w = []
-    for i in previous_days_p:
-        previous_days_w.append(i[0])
-    previous_days_w.reverse()
+        previous_days_w = []
+        for i in previous_days_p:
+            previous_days_w.append(i[0])
+        previous_days_w.reverse()
 
-    connect.commit()
-
-    ## Creating a graph
-    x = previous_days_w
-    ax.clear()
+        connect.commit()
+        ## Creating a graph
+        x = previous_days_w
+        ax.clear()
     
-    plt.subplot(111)
-    ax.set(xlabel='time (days)', ylabel='weight (kg)',
-       title='Weight change chart for 7 days')
+        plt.subplot(111)
+        ax.set(xlabel='time (days)', ylabel='weight (kg)',
+        title='Weight change chart for 7 days')
 
-    ax.grid(which='major',
-        color = 'k',
-        linewidth = 1,
-        linestyle = ':')
-    ax.minorticks_on()
+        ax.grid(which='major',
+            color = 'k',
+            linewidth = 1,
+            linestyle = ':')
+        ax.minorticks_on()
   
-    y = previous_values_w
+        y = previous_values_w
   
-    ax.plot(x, y, color = 'b', linewidth = 3, label='kg')
+        ax.plot(x, y, color = 'b', linewidth = 3, label='kg')
 
-    ax.tick_params(axis = 'both',   
-        which = 'major', 
-        pad = 5,
-        labelsize = 7,
-        labelbottom = True, 
-        labelleft = True,
-        labelrotation = 45) 
+        ax.tick_params(axis = 'both',   
+            which = 'major', 
+            pad = 5,
+            labelsize = 7,
+            labelbottom = True, 
+            labelleft = True,
+            labelrotation = 45) 
 
-    fig.savefig("test.png")
+        fig.savefig("test.png")
 
-    file = open('test.png', 'rb')
+        file = open('test.png', 'rb')
 
-    bot.send_photo(message.chat.id, file)
+        bot.send_photo(message.chat.id, file)
+    except OperationalError:
+        bot.send_message(message.chat.id, "The table is empty, enter the values using the /send command")
+
+    
 
 @bot.message_handler(func=lambda message: True)
 def save_to_db(message):
